@@ -1,0 +1,25 @@
+name: iOS starter workflow
+
+on:
+  push:
+    branches: [ "dev" ]
+
+jobs:
+  build:
+    name: Build
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+      - name: Build
+        run: xcodebuild -project sing-box.xcodeproj -scheme SFI -sdk iphoneos archive -archivePath ./archive CODE_SIGNING_REQUIRED=NO AD_HOC_CODE_SIGNING_ALLOWED=YES CODE_SIGNING_ALLOWED=NO DEVELOPMENT_TEAM=WTFIMFILLINGHERE ORG_IDENTIFIER=com.xunmod
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: archive
+          path: archive.xcarchive/Products/Applications
